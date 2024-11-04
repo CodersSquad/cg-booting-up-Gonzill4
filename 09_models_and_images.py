@@ -20,8 +20,8 @@ class ImageTexture:
         self.ctx = moderngl.get_context()
         img = Image.open(path).convert('RGBA')
         self.texture = self.ctx.texture(img.size, 4, img.tobytes())
-        self.texture.use()  # Bind the texture
-        self.texture.build_mipmaps()  # Optional: generate mipmaps for better scaling
+        self.texture.use()  
+        self.texture.build_mipmaps()  
         self.texture.filter = (moderngl.LINEAR_MIPMAP_LINEAR, moderngl.LINEAR)
 
     def use(self):
@@ -32,27 +32,26 @@ class ModelGeometry:
     def __init__(self, path):
         self.ctx = moderngl.get_context()
         
-        # Use PyWavefront to load the model
+        
         obj = pywavefront.Wavefront(path, collect_faces=True)
         
-        # Collect vertex data (x, y, z) and texture coordinates (u, v)
         vertices = []
         for name, mesh in obj.meshes.items():
             for face in mesh.faces:
                 for vertex_i in face:
                     vertex = obj.vertices[vertex_i]
-                    vertices.extend(vertex[:3])  # Only x, y, z coordinates
-                    if len(vertex) >= 5:  # Check if uv data is available
-                        vertices.extend(vertex[3:5])  # Add texture coordinates
+                    vertices.extend(vertex[:3])  
+                    if len(vertex) >= 5:  
+                        vertices.extend(vertex[3:5])  
 
-        # Pack the vertices into a bytes-like object
+       
         vertex_data = struct.pack(f'{len(vertices)}f', *vertices)
         
-        # Create a buffer with the packed vertex data
+       
         self.vbo = self.ctx.buffer(data=vertex_data)
 
     def vertex_array(self, program):
-        # Create the vertex array object (VAO) for rendering
+      
         return self.ctx.vertex_array(program, [(self.vbo, '3f 2f', 'in_vertex', 'in_uv')])
 
 
@@ -123,7 +122,7 @@ class Scene:
 
         self.texture = ImageTexture('examples/data/textures/TECLOGO.png')
 
-        # Load models and set initial scale factors to make them smaller
+    
         self.skull_geometry = ModelGeometry('examples/data/models/12140_Skull_v3_L2.obj')
         self.skull = Mesh(self.program, self.skull_geometry)
 
@@ -131,8 +130,8 @@ class Scene:
         self.cat = Mesh(self.program, self.cat_geometry, self.texture)
 
     def camera_matrix(self):
-        # Set the camera position further back to fit models within 800x800 viewport
-        eye = (0.0, 0.0, 7.0)  # Adjusted distance to fit models better
+       
+        eye = (0.0, 0.0, 7.0) 
         proj = glm.perspective(45.0, 1.0, 0.1, 1000.0)
         look = glm.lookAt(eye, (0.0, 0.0, 0.0), (0.0, 1.0, 0.0))
         return proj * look
@@ -145,9 +144,9 @@ class Scene:
 
         self.program['camera'].write(camera)
 
-        # Center models with adjusted positions and reduced scale for fitting
-        self.skull.render((0.0, 0.0, -1.0), (1.0, 0.5, 0.5), 0.1)  # Smaller scale for the skull
-        self.cat.render((0.0, 0.0, 0.0), (0.7, 0.7, 1.0), 0.1)   # Smaller scale for the cat, centered texture
+        
+        self.skull.render((0.0, 0.0, -1.0), (1.0, 0.5, 0.5), 0.1)  
+        self.cat.render((0.0, 0.0, 0.0), (0.7, 0.7, 1.0), 0.1)   
 
 
 scene = Scene()

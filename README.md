@@ -21,15 +21,35 @@ This lab stands to prepare the moderngl development environment. Below the steps
 ## How to run your program
 
 ```
-# Update this section with instructions on how to run your programs. 
+-> Install Python 3 and Pip
 
-# Consider that these instructions will be executed 
-in a completely new linux-based machine (Ubuntu 22.04),
-so, instructions for dependencies installation must be added.
+To run the programs, make sure Python 3 and pip are installed:
 
-# It's highly recommended to use python virtual envs. 
-You may take a look on:
-https://docs.python.org/3/library/venv.html
+"sudo apt install -y python3 python3-pip"
+
+-> Install Required Python Packages
+
+The programs require several Python libraries. Install them using pip:
+
+"pip install pygame moderngl PyGLM pywavefront Pillow"
+
+
+
+Open a Python shell and import the required libraries to verify that everything is installed correctly:
+
+"python3
+
+import pygame
+import moderngl
+import glm
+import pywavefront
+from PIL import Image
+exit()"
+
+If no errors occur, you are ready to run the programs.
+
+
+
 ```
 
 ## Grading Policy
